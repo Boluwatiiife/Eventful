@@ -5,37 +5,20 @@ import dotenv from "dotenv";
 
 dotenv.config();
 
-const PORT = process.env.PORT || 3000;
-
 async function main() {
   try {
-    // database connection
+    // Connect database
     await prisma.$connect();
     console.log("Database connected successfully");
 
-    // reminder cron job
+    // Start cron jobs
     startReminderJob();
-
-    app.listen(PORT, () => {
-      console.log(`Server running on port ${PORT}`);
-      console.log(`API docs available at http://localhost:${PORT}/api/docs`);
-      console.log(`Health check at http://localhost:${PORT}/api/health`);
-    });
   } catch (error) {
-    console.error("Failed to start server:", error);
-    process.exit(1);
+    console.error("Startup error:", error);
   }
 }
 
 main();
 
-// Graceful shutdown
-process.on("SIGINT", async () => {
-  await prisma.$disconnect();
-  process.exit(0);
-});
-
-process.on("SIGTERM", async () => {
-  await prisma.$disconnect();
-  process.exit(0);
-});
+// Export app for Vercel
+export default app;
