@@ -21,6 +21,7 @@ import analyticsRoutes from "./modules/analytics/analytics.routes";
 dotenv.config();
 
 const app = express();
+app.set("trust proxy", 1);
 const isProduction = process.env.NODE_ENV === "production";
 
 // Security & parsing middleware
@@ -63,6 +64,7 @@ app.get("/api/health", (_req, res) => {
 });
 
 // Serve React frontend in production
+/*
 if (isProduction) {
   const clientBuildPath = path.join(__dirname, "..", "client", "dist");
 
@@ -74,8 +76,16 @@ if (isProduction) {
     res.sendFile(path.join(clientBuildPath, "index.html"));
   });
 }
-
+*/
 // Error handler
+
+app.get("/", (_req, res) => {
+  res.json({
+    message: "Eventful API is running successfully!",
+    documentation: "/api/docs",
+  });
+});
+
 app.use(errorHandler);
 
 export default app;
